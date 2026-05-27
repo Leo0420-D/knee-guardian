@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>早期预防 - 守护“膝”望</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            /* 【核心修改】应用蓝色渐变背景 */
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            /* 【核心修改】统一导航栏颜色 */
+            background-color: #3f51b5;
+        }
+        header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            color: #FEFAF7;
+        }
+        header nav a {
+            text-decoration: none;
+            color: #fff;
+            border: 1px solid #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            transition: background-color 0.3s, color 0.3s;
+            margin-left: 10px;
+        }
+        header nav a:hover {
+            background-color: #fff;
+            color: #3f51b5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 40px;
+            /* 【核心修改】统一卡片样式 */
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            flex-grow: 1;
+        }
+        h2 {
+            text-align: center;
+            /* 【核心修改】统一标题颜色和字体 */
+            color: #1a237e;
+            margin-bottom: 35px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .options-list {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        /* 【核心修改】统一功能链接卡片样式 */
+        .option-link {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            width: 280px; height: 220px;
+            padding: 20px;
+            background-color: #ffffff;
+            color: #1a237e;
+            text-decoration: none;
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+        }
+        .option-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+        .option-link i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #3f51b5;
+        }
+        /* 【核心修改】统一页脚样式 */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #3f51b5;
+            color: #FEFAF7;
+            font-size: 14px;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>守护“膝”望</h1>
+        <nav>
+            <a href="{{ url_for('intro') }}">返回首页</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2>早期预防</h2>
+        <div class="options-list">
+            <a href="{{ url_for('questionnaire') }}" class="option-link">
+                <i class="fas fa-file-alt"></i>
+                <span>进行风险评估</span>
+            </a>
+            <!-- You can add more options here if needed, for example: -->
+            <!--
+            <a href="{{ url_for('preventive_ai_measures') }}" class="option-link">
+                <i class="fas fa-walking"></i>
+                <span>查看预防措施</span>
+            </a>
+            -->
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024-2025 守护“膝”望 | 版权所有</p>
+    </footer>
+</body>
+</html>

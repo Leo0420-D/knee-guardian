@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - 守护“膝”望团队</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/> <!-- 新增 Font Awesome 用于图标 -->
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #154D57; /* Text color changed to dark green */
+      background-color: #FEFAF7; /* Light background */
+    }
+    header {
+      display: flex;
+      justify-content: space-between; /* 让标题和按钮分开 */
+      align-items: center;
+      padding: 20px 40px; /* 增加左右内边距 */
+      background-color: #B7A08B; /* Background color changed */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      position: sticky; /* 固定头部 */
+      top: 0;
+      z-index: 1000;
+    }
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      margin: 0;
+      color: #FEFAF7; /* White text */
+    }
+    /* 新增返回按钮样式 */
+    .back-button {
+        text-decoration: none;
+        color: #FEFAF7;
+        background-color: #154D57;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        display: inline-flex; /* 用于图标和文字对齐 */
+        align-items: center;
+    }
+    .back-button:hover {
+        background-color: #0e3941;
+    }
+    .back-button i { /* 图标样式 */
+        margin-right: 8px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px 50px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .team-section {
+      display: flex;
+      align-items: center;
+      margin-bottom: 40px;
+      justify-content: center;
+      border-bottom: 2px solid #B7A08B; /* 移到这里，只给团队介绍部分底部边框 */
+      padding-bottom: 40px;
+      /* margin-bottom: 40px; */ /* 上面已经有了 */
+    }
+    .team-logo {
+      flex-shrink: 0;
+      margin-right: 30px;
+    }
+    .team-logo img {
+      border-radius: 50%;
+      width: 180px;
+      height: 180px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .team-info {
+      text-align: center;
+    }
+    .team-info h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: #154D57;
+    }
+    .team-info p {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #154D57;
+      font-style: italic; /* 移到这里，只对团队介绍的 p 生效 */
+    }
+    .member {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 30px;
+    }
+    .member img {
+      border-radius: 50%; /* 改为圆形，与团队logo一致 */
+      width: 150px;   /* 调整大小 */
+      height: 150px;  /* 调整大小 */
+      object-fit: cover; /* 确保图片不变形 */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 统一阴影 */
+    }
+    .member-info {
+      margin-left: 20px;
+      text-align: left;
+    }
+    .member-info h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      margin-bottom: 5px;
+      color: #154D57;
+    }
+    .member-info p {
+      font-size: 16px;
+      line-height: 1.4;
+      margin: 0;
+      color: #154D57;
+    }
+    /* 移除 .team-section 的重复边框，已在上面定义 */
+    /* .team-section {
+      border-bottom: 2px solid #B7A08B;
+      padding-bottom: 40px;
+      margin-bottom: 40px;
+    } */
+  </style>
+</head>
+<body>
+  <header>
+    <h1>关于我们</h1>
+    <a href="{{ url_for('intro') }}" class="back-button"> <!-- 修改这里：添加返回按钮 -->
+      <i class="fas fa-home"></i> 返回主页
+    </a>
+  </header>
+  <div class="container">
+    <div class="team-section">
+      <div class="team-logo">
+        <img src="{{ url_for('static', filename='img/team.jpg')}}" alt="Team Logo">
+      </div>
+      <div class="team-info">
+        <h2>Team TechTribe</h2>
+        <p>
+          这里填写团队介绍 (Need introduction here)
+        </p>
+      </div>
+    </div>
+
+    <div class="member">
+      <img src="{{ url_for('static', filename='img/saee.jpg')}}" alt="Team Member 1">
+      <div class="member-info">
+        <h3>成员1姓名 (name)</h3>
+        <p>职责或简介 (xxxx - xxxxxxx)</p>
+      </div>
+    </div>
+    <div class="member">
+      <img src="{{ url_for('static', filename='img/satyam.jpg')}}" alt="Team Member 2">
+      <div class="member-info">
+        <h3>成员2姓名 (name)</h3>
+        <p>职责或简介 (xxxxx - xxxxxxxxx)</p>
+      </div>
+    </div>
+    <div class="member">
+      <img src="{{ url_for('static', filename='img/komal.jpg')}}" alt="Team Member 3">
+      <div class="member-info">
+        <h3>成员3姓名 (name)</h3>
+        <p>职责或简介 (xxxxx - xxxxxxxxx)</p>
+      </div>
+    </div>
+    <div class="member">
+      <img src="{{ url_for('static', filename='img/rimjhim.jpg')}}" alt="Team Member 4">
+      <div class="member-info">
+        <h3>成员4姓名 (name)</h3>
+        <p>职责或简介 (xxxxx - xxxxxxxxx)</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

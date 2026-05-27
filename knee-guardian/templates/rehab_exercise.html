@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ exercise.name }} - 康复训练</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Roboto', 'Microsoft YaHei', sans-serif;
+            color: #333;
+        }
+        .navbar {
+            background-color: #3f51b5 !important;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: #FEFAF7 !important;
+        }
+        .page-title h1 {
+            font-weight: 700;
+            color: #1a237e;
+        }
+        .video-container {
+            max-width: 800px;
+            background-color: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 4 / 3;
+            margin: 0 auto;
+        }
+        .loading-placeholder {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            background-color: #343a40; color: white; z-index: 10;
+        }
+        #videoFeed {
+            display: block; /* Start as block to take space */
+            width: 100%; height: 100%;
+            object-fit: cover;
+            visibility: hidden; /* Hide until loaded */
+        }
+        .btn-custom-primary, .btn-custom-secondary {
+            border: none; padding: 0.75rem 1.5rem; border-radius: 50px;
+            font-weight: 600; transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(63, 81, 181, 0.4);
+        }
+        .btn-custom-primary {
+            background: linear-gradient(45deg, #3f51b5, #5c6bc0);
+            color: white;
+        }
+        .btn-custom-primary:hover, .btn-custom-primary:focus {
+            color: white; transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(63, 81, 181, 0.5);
+        }
+        .btn-custom-secondary {
+            background: #fff; color: #3f51b5;
+            border: 2px solid #3f51b5;
+        }
+        .btn-custom-secondary:hover {
+            background: #e8eaf6; transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(63, 81, 181, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('intro') }}">守护“膝”望</a>
+            <a href="{{ url_for('diagnosis_rehab_options') }}" class="btn btn-outline-light">返回运动列表</a>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="text-center mb-4 page-title">
+            <h1>{{ exercise.name }}</h1>
+            <p class="lead text-muted px-md-5">{{ exercise.description }}</p>
+        </div>
+
+        <div class="video-container shadow-lg">
+            <div id="videoPlaceholder" class="loading-placeholder">
+                <div class="spinner-border text-light" role="status"></div>
+                <span class="ms-3">正在启动摄像头...</span>
+            </div>
+            <!-- The src will be set by JavaScript -->
+            <img id="videoFeed" src="" alt="康复训练实时视频">
+        </div>
+
+        <div class="text-center mt-4" id="controls-panel">
+            <div id="feedback-display" class="alert" role="alert" style="display: none; max-width: 800px; margin: 20px auto; background-color: #e8eaf6; border-color: #7986cb; color: #1a237e; font-size: 1.1rem; font-weight: 500;">
+                正在获取状态...
+            </div>
+            <button id="resetButton" class="btn btn-custom-secondary btn-lg mx-2"><i class="fas fa-undo"></i> 重置计数</button>
+            <button id="stopButton" class="btn btn-custom-primary btn-lg mx-2"><i class="fas fa-stop-circle"></i> 停止并返回</button>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- 【【【 这是补全的JavaScript交互模块 】】】 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const exerciseKey = '{{ exercise_key }}';
+        const videoFeed = document.getElementById('videoFeed');
+        const videoPlaceholder = document.getElementById('videoPlaceholder');
+        const feedbackDisplay = document.getElementById('feedback-display');
+        const resetButton = document.getElementById('resetButton');
+        const stopButton = document.getElementById('stopButton');
+        let statusInterval;
+
+        // Function to update status from backend
+        async function updateStatus() {
+            try {
+                const response = await fetch(`/rehab_status/${exerciseKey}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+
+                let metricsText = Object.entries(data.metrics)
+                                        .map(([key, value]) => `${key}: ${value}`)
+                                        .join(' | ');
+
+                feedbackDisplay.innerHTML = `<strong>${data.feedback}</strong><br><small>${metricsText}</small>`;
+
+            } catch (error) {
+                console.error('Failed to fetch status:', error);
+                feedbackDisplay.textContent = '无法获取状态，请检查连接。';
+                clearInterval(statusInterval);
+            }
+        }
+
+        // Function to gracefully stop camera and redirect
+        async function stopCameraAndRedirect() {
+            clearInterval(statusInterval); // Stop polling for status
+            try {
+                // Inform the backend to release the camera
+                await fetch('/stop_camera', { method: 'POST' });
+            } catch (error) {
+                console.error('Failed to signal camera stop:', error);
+            } finally {
+                // Redirect back to the options page
+                window.location.href = "{{ url_for('diagnosis_rehab_options') }}";
+            }
+        }
+
+        // --- Event Listeners ---
+
+        // Start video feed and status polling once the page is loaded
+        videoFeed.onload = () => {
+            videoPlaceholder.style.display = 'none';
+            videoFeed.style.visibility = 'visible';
+            feedbackDisplay.style.display = 'block';
+            statusInterval = setInterval(updateStatus, 1000); // Poll every 1 second
+        };
+        videoFeed.onerror = () => {
+            videoPlaceholder.innerHTML = '<i class="fas fa-video-slash fa-2x"></i><span class="ms-3">摄像头启动失败，请检查设备权限或连接。</span>';
+        };
+        // Set the src to start the video stream from the backend
+        videoFeed.src = `/video_feed/${exerciseKey}?t=${new Date().getTime()}`; // Add timestamp to prevent caching issues
+
+        // Reset button
+        resetButton.addEventListener('click', async () => {
+            try {
+                await fetch(`/rehab_reset/${exerciseKey}`, { method: 'POST' });
+                feedbackDisplay.textContent = '计数已重置！';
+            } catch (error) {
+                console.error('Failed to reset:', error);
+                feedbackDisplay.textContent = '重置失败。';
+            }
+        });
+
+        // Stop button
+        stopButton.addEventListener('click', stopCameraAndRedirect);
+
+        // Ensure camera is released when the user navigates away or closes the tab
+        window.addEventListener('beforeunload', function(event) {
+            // Use sendBeacon for reliability when the page is unloading
+            navigator.sendBeacon('/stop_camera', new Blob());
+        });
+    });
+</script>
+
+</body>
+</html>

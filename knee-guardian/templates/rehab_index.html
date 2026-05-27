@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>诊断与康复中心 - 守护“膝”望</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 移除了 Playfair Display 字体，统一为无衬线字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 核心风格修改 --- */
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            /* 【核心修改】替换为蓝色渐变背景 */
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333; /* 默认文本颜色改为深灰色 */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        /* 【核心修改】统一导航栏为深蓝色 */
+        .navbar {
+            background-color: #3f51b5 !important;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: #FEFAF7 !important;
+        }
+
+        /* 【核心修改】统一Hero区域为深蓝色 */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background-color: #1a237e; /* 使用深靛蓝色 */
+            color: white;
+        }
+        .hero h1 {
+            font-weight: 700;
+        }
+
+        /* 【核心修改】统一卡片风格 */
+        .feature-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: none;
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+        .feature-card .card-title {
+             color: #1a237e;
+             font-weight: 700;
+        }
+
+        /* 【核心修改】统一按钮风格 */
+        .btn-custom-primary {
+            background: linear-gradient(45deg, #3f51b5, #5c6bc0);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(63, 81, 181, 0.4);
+        }
+        .btn-custom-primary:hover, .btn-custom-primary:focus {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(63, 81, 181, 0.5);
+        }
+
+        /* 【核心修改】康复方案区域卡片化 */
+        .grade-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: none;
+        }
+
+        .grade-header {
+            border-bottom: 2px solid #7986cb; /* 蓝色下划线 */
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .grade-header h2 {
+            color: #1a237e; /* 深靛蓝标题 */
+            font-weight: 700;
+        }
+        .grade-header p { color: #6c757d; }
+
+        /* 【核心修改】康复运动条目风格 */
+        .exercise-card {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background-color: #fff; /* 改为白色背景 */
+            border: 1px solid #e0e0e0; /* 添加细边框 */
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            background-color: #f8f9fa; /* 悬停时背景变灰 */
+            border-color: #3f51b5;
+        }
+        .exercise-icon {
+            font-size: 2.5rem;
+            color: #3f51b5; /* 蓝色图标 */
+            margin-right: 20px;
+            width: 50px;
+            text-align: center;
+        }
+        .exercise-info h5 {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #1a237e; /* 深蓝色标题 */
+        }
+        .exercise-info p { margin-bottom: 0; color: #6c757d; font-size: 0.9rem; }
+        .arrow-icon { margin-left: auto; font-size: 1.5rem; color: #adb5bd; transition: color 0.3s; }
+        .exercise-card:hover .arrow-icon { color: #3f51b5; } /* 悬停时箭头变蓝 */
+
+        /* 【核心修改】统一页脚为深蓝色 */
+        footer {
+            background-color: #3f51b5;
+            color: #FEFAF7;
+            margin-top: auto; /* 确保页脚在内容不足时也置底 */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('intro') }}">守护“膝”望</a>
+            <a href="{{ url_for('intro') }}" class="btn btn-outline-light">返回首页</a>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="container">
+            <h1>诊断与康复中心</h1>
+            <p class="lead">请选择您需要的功能：进行X光片辅助诊断，或查看分级康复运动方案。</p>
+        </div>
+    </div>
+
+    <div class="container py-5 main-content">
+        <!-- 功能选择卡片 -->
+        <div class="row row-cols-1 row-cols-md-2 g-4 mb-5">
+            <!-- X光片辅助诊断卡片 -->
+            <div class="col d-flex">
+                <div class="card feature-card text-center w-100">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <i class="fas fa-x-ray fa-3x mb-3" style="color: #3f51b5;"></i>
+                        <h3 class="card-title">X光片辅助诊断</h3>
+                        <p class="card-text text-muted">上传您的膝关节X光片，通过人工智能模型进行初步的骨关节炎严重程度分级评估。</p>
+                        <a href="{{ url_for('prediction') }}" class="btn btn-custom-primary stretched-link mt-auto">开始诊断</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 分级康复运动指导卡片 -->
+            <div class="col d-flex">
+                <div class="card feature-card text-center w-100">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <i class="fas fa-person-walking fa-3x mb-3" style="color: #3f51b5;"></i>
+                        <h3 class="card-title">分级康复运动指导</h3>
+                        <p class="card-text text-muted">根据国际K-L分级标准，为您提供配有AI实时动作指导的康复运动方案。</p>
+                        <a class="btn btn-custom-primary stretched-link mt-auto" data-bs-toggle="collapse" href="#rehab-sections" role="button" aria-expanded="false" aria-controls="rehab-sections">
+                            查看方案
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 康复运动方案 (默认折叠) -->
+        <div class="collapse" id="rehab-sections">
+            <hr class="my-5">
+            <div class="text-center mb-5">
+                <h2 style="color: #1a237e; font-weight: 700;">分级康复运动详情</h2>
+                <p class="lead text-muted">请根据自身情况或医嘱，选择合适的康复阶段进行训练。</p>
+            </div>
+
+            {% if exercises_by_grade %}
+                {% for grade_key, grade_data in exercises_by_grade.items() %}
+                <div class="grade-section">
+                    <div class="grade-header">
+                        <h2>{{ grade_data.grade_name }}</h2>
+                        <p>{{ grade_data.description }}</p>
+                    </div>
+
+                    {% if grade_data.exercises %}
+                        {% for key, val in grade_data.exercises.items() %}
+                        <a href="{{ url_for('rehab_exercise_page', exercise_key=key) }}" class="exercise-card">
+                            <div class="exercise-icon">
+                                <i class="fas fa-dumbbell"></i>
+                            </div>
+                            <div class="exercise-info">
+                                <h5>{{ val.name }}</h5>
+                                <p>{{ val.description.split('。')[0] + '。' }}</p> {# 只显示第一句话作为简介 #}
+                            </div>
+                            <div class="arrow-icon">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-center text-muted">此阶段暂无推荐的AI指导运动项目。</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-center display-6 text-muted mt-5">当前没有可用的康复运动项目。</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <footer class="text-center py-4">
+        <p class="mb-0">&copy; 2024-2025 守护“膝”望 | 版权所有</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

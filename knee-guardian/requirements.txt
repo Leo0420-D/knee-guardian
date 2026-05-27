@@ -1,0 +1,12 @@
+Flask
+opencv-python
+gdown
+werkzeug
+gunicorn
+scikit-learn
+tensorflow
+numpy
+Pillow
+mediapipe
+websocket-client
+bleak
