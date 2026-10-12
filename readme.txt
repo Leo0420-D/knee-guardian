@@ -102,7 +102,15 @@ pip install -r knee-guardian/requirements.txt
 
 - **字体文件**：确保 `knee-guardian/Fonts/SimHei.ttf` 存在（用于视频反馈中文显示）
 - **模型文件**：首次运行时会自动从 Google Drive 下载 `models/model_4_8200.h5`，或手动放置
-- **讯飞星火 API**：在 `app.py` 中配置 `SPARK_APPID`、`SPARK_API_KEY`、`SPARK_API_SECRET`
+- **讯飞星火 API**：凭据从**环境变量**读取，不要写进源码
+
+```bash
+cd knee-guardian
+cp .env.example .env      # Windows: copy .env.example .env
+# 然后编辑 .env，填入自己的 SPARK_APPID / SPARK_API_KEY / SPARK_API_SECRET
+```
+
+  `.env` 已被 `.gitignore` 忽略。未配置凭据时 AI 对话功能会自动禁用，其余功能不受影响。
 
 ### 步骤 3：启动应用
 
@@ -137,5 +145,6 @@ python app.py
 
 - TensorFlow >= 2.11 在原生 Windows 上不支持 GPU，需使用 WSL2 或 DirectML 插件
 - 摄像头功能需要设备配备可用摄像头
-- AI 对话功能依赖讯飞星火 API，需有效的 API 凭证
+- AI 对话功能依赖讯飞星火 API，需有效的 API 凭证（通过环境变量配置，见步骤 2）
+- **不要把自己的凭据提交进仓库。** 凭据放 `.env`（已被忽略）或部署平台的环境变量里
 - 本系统仅供辅助参考，不能替代执业医师的诊断与治疗建议

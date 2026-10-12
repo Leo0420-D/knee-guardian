@@ -10,3 +10,4 @@ Pillow
 mediapipe
 websocket-client
 bleak
+python-dotenv

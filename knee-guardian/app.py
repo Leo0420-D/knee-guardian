@@ -80,16 +80,31 @@ except Exception as e:
     model = None
 
 # -----------------------------------------------------------------------------
-# iFlytek Spark API 设置 (这部分保持不变)
+# 讯飞星火 API 设置
+#
+# 凭据一律从环境变量读取，不要硬编码进源码 —— 本仓库是公开的。
+# 配置方式（二选一）：
+#   本地：复制 knee-guardian/.env.example 为 knee-guardian/.env，填入自己的凭据
+#   部署：在平台的环境变量面板里设置同名变量
+# 未配置凭据时，AI 对话功能自动降级禁用，其余功能不受影响。
 # -----------------------------------------------------------------------------
-SPARK_APPID = "REDACTED-见后续提交"
-SPARK_API_KEY = "REDACTED-见后续提交"
-SPARK_API_SECRET = "REDACTED-见后续提交"
-SPARK_URL = "wss://spark-api.xf-yun.com/v4.0/chat"
-SPARK_DOMAIN = "4.0Ultra"
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv()  # 读取当前工作目录下的 .env（已被 .gitignore 忽略，不会进仓库）
+except ImportError:
+    pass  # 未安装 python-dotenv 时退化为只读系统环境变量
+
+SPARK_APPID = os.environ.get("SPARK_APPID", "")
+SPARK_API_KEY = os.environ.get("SPARK_API_KEY", "")
+SPARK_API_SECRET = os.environ.get("SPARK_API_SECRET", "")
+SPARK_URL = os.environ.get("SPARK_URL", "wss://spark-api.xf-yun.com/v4.0/chat")
+SPARK_DOMAIN = os.environ.get("SPARK_DOMAIN", "4.0Ultra")
+
+SPARK_CREDENTIALS_READY = all((SPARK_APPID, SPARK_API_KEY, SPARK_API_SECRET))
 spark_client = None
 
-if SparkChatClient:
+if SparkChatClient and SPARK_CREDENTIALS_READY:
     try:
         spark_client = SparkChatClient(
             app_id=SPARK_APPID, api_key=SPARK_API_KEY, api_secret=SPARK_API_SECRET,
@@ -98,6 +113,10 @@ if SparkChatClient:
         print("自定义的讯飞星火客户端初始化成功。")
     except Exception as e:
         print(f"!!! 错误: 自定义的讯飞星火客户端初始化失败: {e}")
+elif SparkChatClient:
+    print("!!! 警告: 未检测到讯飞星火凭据，AI 对话功能已禁用（其余功能不受影响）。")
+    print("     请设置环境变量 SPARK_APPID / SPARK_API_KEY / SPARK_API_SECRET，")
+    print("     或复制 knee-guardian/.env.example 为 knee-guardian/.env 并填入凭据。")
 else:
     print("!!! 警告: 自定义的讯飞星火客户端未加载，AI聊天功能将不可用。")
 
